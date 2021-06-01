@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+   <style>
+        .rect {
+          border: 2px solid #a64ceb;
+          left: -1000px;
+          position: absolute;
+          top: -1000px;
+        }
+    </style>
+
+    <script>
+           window.onload = function() {
+              // Will be true if bootstrap is loaded, false otherwise
+            var bootstrap_enabled = (typeof $().modal == 'function');
+
+              console.log(bootstrap_enabled);
+            var img = document.getElementById('imgtarget');
+
+            // Display your digit
+          	function readURL1(input) {
+            if (input.files && input.files[0]) {
+            var reader = new FileReader();
+              reader.onload = function (e) {
+                  $('#imgtarget')
+                      .attr('src', e.target.result)
+                      .width(150)
+                      .height(200);
+              };
+              reader.readAsDataURL(input.files[0]);
+              }
+            }
+          }
+    </script>
+
+  <body>
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/" >Gesture Project</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="https://github.com/abdullahmujahidali/IoT-ASL/blob/main/README.md">User guide</a></li>
+                <li><a href="https://github.com/abdullahmujahidali/IoT-ASL/blob/main/issues">Report an issue</a></li>
+            </ul>
+              <div>
+                <!-- Using jinja here to hide the logout link when user has logged out -->
+                <ul class="nav navbar-nav">
+                    <!-- If username is active in the session then display the logout link otherwise blank.. -->
+                    {% if 'username' in session %}
+                        <li class="nav-item"><a href="/logout">Logout<span class="sr-only">(current)</span></a></li>
+                  {% endif %}
+                  </ul>
+              </div>
+         </div>
+
+    </nav>
+    <main role="main" class="container">
+    {% block body %}{% endblock %}
+    </main>
+    {% if 'username' in session %}
+          <div class="text-center">
+                    <!-- Using flash messages -->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-success alert-dismissible margin-buffer" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="close"><span aria-hidden="true"></span>&times;</button>
+                  {{message}}
+                </div>
+              {% endfor%}
+            {% endif%}
+          {% endwith %}
+
+          
+          
+            <h1>Practice your alphabet in sign language here!</h1>
+		<h2>Press 'q' to quit</h2>
+              <div class="col-xs-6 col-xl-6 item">
+                <h3 class="display-3">ASL Converter</h3>
+                <form  id="fileupload" action="/camera" method="POST" role="form"
+                          enctype = "multipart/form-data" >
+                    <input id="digitpredictbtn" onchange="readURL1(this);" class="btn btn-success" type = "submit"/>
+                </form>
+              </div>
+              <div class="col-xs-6 col-xl-6 item">
+                <h3 class="display-3">Number Converter</h3>
+                <form  id="fileupload" action="/camera2" method="POST" role="form"
+                          enctype = "multipart/form-data" >
+                    <input id="digitpredictbtn" onchange="readURL1(this);" class="btn btn-success" type = "submit"/>
+                </form>
+              </div>
+              
+        </div>
+
+      <div class="demo-container">
+        <div class="jumbotron">
+          <div class="text-center">
+            <h4>Cheat sheet for learning American Sign Language.</h4>
+           <img id="imgASL" class="img-thumbnail" src="../static/assets/ASL.jpg" />
+           </div>
+        </div>
+      </div>
+
+      <div class="demo-container">
+        <div class="jumbotron">
+          <div class="text-center">
+            <h4>Picture from OpenCV session.</h4>
+           <img id="imgtarget" class="img-thumbnail" src="../static/assets/img1.jpg" />
+           </div>
+        </div>
+      </div>
+      {% endif %}
+  </body>
+</html>
